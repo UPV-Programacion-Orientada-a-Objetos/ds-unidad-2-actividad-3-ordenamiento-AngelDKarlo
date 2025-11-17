@@ -168,4 +168,66 @@ Para llevar a cabo esta actividad, el alumno deberá investigar y dominar a fond
 2. **Programación Serial en C++ (El Reto Principal):** Cómo abrir, configurar (Baud Rate) y leer desde un puerto COM (ej. `\\.\COM3` en Windows o `/dev/ttyUSB0` en Linux) usando **solo librerías estándar** (como `<fstream>` o APIs de Win32/POSIX).
 3. **Gestión de Múltiples Archivos:** El uso de `<fstream>` (o `FILE*` en C) para manejar K archivos de entrada simultáneamente y un archivo de salida.
 4. **Parseo de Cadenas (C-style):** Convertir el texto leído del serial (ej. "105") a un entero (ej. `atoi()`), sin usar `std::string`.
-5. **Destructores Virtuales:** La necesidad **crítica** de que `~DataSource()` sea virtual para asegurar que el destructor de `FileSource` (que cierra el archivo) se llame correctamente al hacer `delete` sobre un punter
+5. **Destructores Virtuales:** La necesidad **crítica** de que `~DataSource()` sea virtual para asegurar que el destructor de `FileSource` (que cierra el archivo) se llame correctamente al hacer `delete` sobre un puntero.
+
+-----
+
+## ✅ IMPLEMENTACIÓN COMPLETADA
+
+### 📁 Archivos del Proyecto
+
+- **DataSource.h** - Clase base abstracta para fuentes de datos
+- **SerialSource.h** - Clase que lee datos del Arduino por puerto serial
+- **FileSource.h** - Clase que lee datos de archivos
+- **CircularBuffer.h** - Lista circular doblemente enlazada de tamaño fijo
+- **Phase1.h** - Fase 1: Adquisición y segmentación
+- **Phase2.h** - Fase 2: Fusión externa (K-Way Merge)
+- **main.cpp** - Programa principal que coordina ambas fases
+- **Makefile** - Sistema de compilación
+- **setup_serial.sh** - Script para configurar el puerto serial
+- **INSTRUCCIONES.md** - Guía detallada de uso
+
+### 🚀 Inicio Rápido
+
+```bash
+# 1. Configurar puerto serial (opcional)
+./setup_serial.sh
+
+# 2. Compilar
+make
+
+# 3. Ejecutar
+./esort
+```
+
+### 📊 Características Implementadas
+
+✅ **POO Avanzada**: Herencia, polimorfismo y clases abstractas  
+✅ **Lista Circular**: Implementación manual con punteros (buffer de 1000 elementos)  
+✅ **Ordenamiento Externo**: External Mergesort con K-Way Merge  
+✅ **Comunicación Serial**: Lectura en tiempo real desde Arduino  
+✅ **Sin STL**: Todo implementado manualmente (sin vector, list, string, sort)  
+✅ **Gestión de Memoria**: Uso correcto de new/delete y destructores virtuales  
+
+### 📖 Documentación
+
+Consulta **INSTRUCCIONES.md** para una guía completa de uso, configuración y solución de problemas.
+
+### 🏗️ Arquitectura del Sistema
+
+```
+Arduino (test.ino)
+    ↓ [Serial Port]
+SerialSource → CircularBuffer → Chunks (.tmp)
+                                    ↓
+                              K-Way Merge
+                                    ↓
+                            output.sorted.txt
+```
+
+### 🎯 Funcionamiento
+
+1. **Fase 1**: Lee del Arduino, llena buffer circular, ordena y genera chunks
+2. **Fase 2**: Fusiona todos los chunks en un archivo final ordenado
+
+**Memoria constante**: Solo usa el buffer circular (1000 elementos), sin importar cuántos datos procese.

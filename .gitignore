@@ -1,2 +1,22 @@
-.vscode
+# Archivos compilados
+*.o
+esort
+
+# Archivos de datos generados
+chunk_*.tmp
+output.sorted.txt
+
+# Archivos temporales
+*.swp
+*.swo
+*~
+
+# Archivos de IDE
+.vscode/
 .vscode/*
+.idea/
+*.code-workspace
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
